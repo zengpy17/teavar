@@ -58,11 +58,14 @@ function TEAVAR(env,
         end
     end
 
-    model = Model(solver=GurobiSolver(env, OutputFlag=0))
-    @variable(model, a[1:nflows, 1:k] >= 0, basename="a", category=:SemiCont)
-    @variable(model, alpha >= 0, basename="alpha", category=:SemiCont)
-    @variable(model, umax[1:nscenarios] >= 0, basename="umax")
-    @variable(model, u[1:nscenarios, 1:nflows] >= 0, basename="u")
+    # model = Model(solver=GurobiSolver(env, OutputFlag=0))
+    model = Model(() -> Gurobi.Optimizer(env))
+    set_optimizer_attribute(model, "OutputFlag", 0)
+    # @variable(model, a[1:nflows, 1:k] >= 0, base_name="a", category=:SemiCont)
+    @variable(model, a[1:nflows, 1:k] >= 0, base_name="a")
+    @variable(model, alpha >= 0, base_name="alpha")
+    @variable(model, umax[1:nscenarios] >= 0, base_name="umax")
+    @variable(model, u[1:nscenarios, 1:nflows] >= 0, base_name="u")
  
 
     # for s in 1:nscenarios
@@ -99,13 +102,14 @@ function TEAVAR(env,
     end
 
     @objective(model, Min, alpha + (1 / (1 - beta)) * sum((p[s] * umax[s] for s in 1:nscenarios)))
-    solve(model)
+    # solve(model)
+    optimize!(model)
 
 
     if (explain)
-        printResults(getobjectivevalue(model), getvalue(alpha), getvalue(a), getvalue(u), getvalue(umax), edges, scenarios, T, Tf, L, capacity, verbose=verbose, utilization=utilization)
+        printResults(objective_value(model), value(alpha), value.(a), value.(u), value.(umax), edges, scenarios, T, Tf, L, capacity, verbose=verbose, utilization=utilization)
     end
     
-    return (getvalue(alpha), getobjectivevalue(model), getvalue(a), getvalue(umax))
+    return (value(alpha), objective_value(model), value.(a), value.(umax))
 end
 

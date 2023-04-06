@@ -37,7 +37,7 @@ function parse_commandline()
                             availability (Fig 7)
                             cutoff_error (Fig 12b)
                             path_selection (Fig 11)
-                            probability_noise (Table 3)
+                           W probability_noise (Table 3)
                             throughput (Fig 9)
                             utilization"
         "--plot", "-p"
