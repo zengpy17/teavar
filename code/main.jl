@@ -115,9 +115,11 @@ Base.@ccallable function julia_main()::String
         noises = map(i -> parse(Float64, i), split(readInput("Noises (.01,.05,.1,.15,.2): ", ".01,.05,.1,.15,.2", String), ","))
         probabilityNoise(topologies, demand_downscales, num_demands, iterations, cutoff, noises, paths="SMORE", weibull_scale=.001, add_noise="EVENTS", plot=plot)
     elseif experiment == "throughput"
-        topologies = split(readInput("Topologies (B4,ATT): ", "B4,ATT", String), ",")
+        # topologies = split(readInput("Topologies (B4,ATT): ", "B4,ATT", String), ",")
+        topologies = split(readInput("Topologies (B4): ", "B4", String), ",")
         demand_downscales = map(i -> parse(Float64, i), split(readInput("Demand downscales (1,1): ", "1,1", String), ","))        
-        algorithms = split(readInput("Algorithms (TEAVAR,SMORE,ECMP,FFC): ", "TEAVAR,SMORE,ECMP,FFC", String), ",")
+        # algorithms = split(readInput("Algorithms (TEAVAR,SMORE,ECMP,FFC): ", "TEAVAR,SMORE,ECMP,FFC", String), ",")
+        algorithms = split(readInput("Algorithms (FFC): ", "FFC", String), ",")
         availabilities = map(i -> parse(Float64, i), split(readInput("Availabilities (.9,.95,.99,.999,.9999): ", ".9,.95,.99,.999,.9999", String), ","))
         cutoff = readInput("Cutoff (0.00001): ", 0.00001, Float64)
         num_demands = readInput("Number of demands (4): ", 4, Int)
