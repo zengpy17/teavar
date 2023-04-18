@@ -72,6 +72,7 @@ function availabilityPlot(algorithmns,
         push!(scenario_probs_all, scenario_probs_top)
     end    
 
+    # Create scale array to compute availability
     scales = collect(start:step:finish)
     progress = ProgressMeter.Progress(length(scales)*length(topologies)*num_demands*iterations*length(algorithmns), .1, "Computing Availability...", 50)
     confidence = zeros(length(scales), 3 * length(algorithmns) + 1)
@@ -79,8 +80,12 @@ function availabilityPlot(algorithmns,
     for s in 1:length(scales)
         availabilities = [[] for i in 1:length(algorithmns)]
         for t in 1:length(topologies)
+            # Read topologies again, same as above
             links, capacity, link_probs, nodes = readTopology(topologies[t])
             for d in 1:num_demands
+                # Load pre-defined demand settings from file
+                # flows: the list of source-target vertices pair
+                # demand: the value of demand corresponding to the source-target vertices pair
                 demand, flows = readDemand("$(topologies[t])/demand", length(nodes), d, scale=scales[s], downscale=demand_downscales[t])
                 if paths != "KSP"
                     T, Tf, k = parsePaths("$(topologies[t])/paths/$(paths)", links, flows)
