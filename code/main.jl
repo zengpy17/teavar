@@ -37,7 +37,7 @@ function parse_commandline()
                             availability (Fig 7)
                             cutoff_error (Fig 12b)
                             path_selection (Fig 11)
-                           W probability_noise (Table 3)
+                            probability_noise (Table 3)
                             throughput (Fig 9)
                             utilization"
         "--plot", "-p"
@@ -78,7 +78,8 @@ Base.@ccallable function julia_main()::String
         getThroughputGuarantees(availabilities, cutoff, topologies, num_demands, iterations, plot=plot)
     elseif experiment == "availability"
         topologies = split(readInput("Topologies (IBM): ", "IBM", String), ",")
-        algorithms = split(readInput("Algorithms (TEAVAR,SMORE,ECMP,FFC-1): ", "TEAVAR,SMORE,ECMP,FFC-1", String), ",")
+        # algorithms = split(readInput("Algorithms (TEAVAR,SMORE,ECMP,FFC-1): ", "TEAVAR,SMORE,ECMP,FFC-1", String), ",")
+        algorithms = split(readInput("Algorithms (FFC-1): ", "FFC-1", String), ",")
         cutoff = readInput("Cutoff (0.0001): ", 0.0001, Float64)
         weibull_scale = readInput("Weibull scale (0.001): ", 0.001, Float64)
         num_demands = readInput("Number of demands (10): ", 10, Int)

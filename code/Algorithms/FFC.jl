@@ -74,10 +74,12 @@ function FFC(env, edges, capacity, flows, demand, k, T, Tf; minb=0)
         end
     end
 
-    model = Model(solver=GurobiSolver(env, OutputFlag=0))
-    @variable(model, b[1:nflows] >= 0, basename="b")
-    @variable(model, a[1:nflows,1:size(Tf[1],1)] >= 0, basename="a")
-    @variable(model, u >= 0, basename="u")
+    # model = Model(solver=GurobiSolver(env, OutputFlag=0))
+    model = Model(() -> Gurobi.Optimizer(env))
+    set_optimizer_attribute(model, "OutputFlag", 0)
+    @variable(model, b[1:nflows] >= 0, base_name="b")
+    @variable(model, a[1:nflows,1:size(Tf[1],1)] >= 0, base_name="a")
+    @variable(model, u >= 0, base_name="u")
 
 
     for f in 1:nflows
@@ -110,8 +112,10 @@ function FFC(env, edges, capacity, flows, demand, k, T, Tf; minb=0)
     end
   #   @objective(model, Max, u)
 
-    @objective(model, Max, sum((b[i] for i in 1:size(b,1))))
-    solve(model)
+    @objective(model, Max, sum((b[i] for i in 1:size(b,1))))
+    # solve(model)
+    optimize!(model)
     # printResults(getobjectivevalue(model), a, b, edges, T, Tf)
-    return getvalue(a), getvalue(b)
+    # return getvalue(a), getvalue(b)
+    return value.(a), value.(b)
 end
